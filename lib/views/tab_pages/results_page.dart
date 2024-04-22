@@ -364,7 +364,10 @@ class _ResultsPageState extends State<ResultsPage> {
                               ),
                             ),
                             StreamBuilder(
-                                stream: FirebaseFirestore.instance.collection('results_reason').orderBy('reason').snapshots(),
+                                stream: FirebaseFirestore.instance.collection('results_reason')
+                                    .
+                                     where('institutionID', isEqualTo: _institutionController.institution.value.id)
+                                    .snapshots(),
                                 builder: (context, snapshot) {
                                   return snapshot.hasData&&snapshot.data!.size>0?Container(
                                       width: 150,
@@ -422,7 +425,10 @@ class _ResultsPageState extends State<ResultsPage> {
                                         color: kara.Colors.green,
                                         borderRadius: BorderRadius.circular(5)
                                     ),
-                                    child: Center(child: Text('Save', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)))
+                                    child: Center(
+                                            child: Text('Save', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)
+                                        )
+                                    ),
                                 ),
                               ),
                             ),

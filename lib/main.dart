@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get_storage/get_storage.dart';
@@ -18,8 +16,6 @@ import 'controllers/institution_controller.dart';
 import 'helpers/quick_sign_in.dart';
 
 void main() async{
-  ui.platformViewRegistry
-      .registerViewFactory('example', (_) => DivElement()..innerText = 'Hello, HTML!');
   await Firebase.initializeApp(
       options: FirebaseOptions(
         apiKey: "AIzaSyBqw8ZR0SHyBePygK5f9qqX3ygI9AwueSY",
@@ -58,7 +54,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Color(0xf0a3462)),
         useMaterial3: true,
       ),
-      home: GetStorage().hasData('email')?Home():Sign(),
+      home: Sign(), //GetStorage().hasData('email')?Home():
     );
   }
 }

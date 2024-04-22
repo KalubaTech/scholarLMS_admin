@@ -655,12 +655,12 @@ class Methods {
                                                           child: Row(
                                                               children: [
                                                                 IconButton(
-                                                                  icon: Icon(Icons.edit, color: Colors.blue),
-                                                                  onPressed: ()=>null,
-                                                                ),
-                                                                IconButton(
                                                                   icon: Icon(Icons.delete, color: Colors.red),
-                                                                  onPressed: ()=>null,
+                                                                  onPressed: (){
+                                                                    FirebaseFirestore.instance
+                                                                        .collection('grading_system').doc(e.id).delete();
+                                                                    shownackbar('Deleted!', context);
+                                                                  },
                                                                 ),
                                                               ]
                                                           )
@@ -1192,7 +1192,9 @@ class Methods {
                       child: Container(
                           color: Colors.white,
                           child: StreamBuilder(
-                              stream: FirebaseFirestore.instance.collection('tutor').snapshots(),
+                              stream: FirebaseFirestore.instance.collection('tutor')
+                                  .where('institutionID', isEqualTo: _tutorController.tutor.value.institutionID)
+                                  .snapshots(),
                               builder: (content,snapshot){
                                 if(snapshot.hasData && snapshot.data!.docs.isNotEmpty){
                                   return ListView.builder(
@@ -1709,7 +1711,10 @@ class Methods {
                       child: Container(
                           color: Colors.white,
                           child: StreamBuilder(
-                              stream: FirebaseFirestore.instance.collection('programmes').snapshots(),
+                              stream: FirebaseFirestore.instance
+                                  .collection('programmes')
+                                  .where('institutionID', isEqualTo: _tutorController.tutor.value.institutionID)
+                                  .snapshots(),
                               builder: (content,snapshot){
                                 if(snapshot.hasData && snapshot.data!.docs.isNotEmpty){
                                   return ListView.builder(

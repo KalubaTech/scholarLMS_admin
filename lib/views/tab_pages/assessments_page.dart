@@ -167,9 +167,9 @@ class _AssessmentsPageState extends State<AssessmentsPage> {
                                                 width: 250,
                                                 child: ListView(
                                                   shrinkWrap: true,
-                                                  children: snapshot.data!.docs.map<Widget>((e) =>
-                                                      TouchRippleEffect(
-                                                        rippleColor: Colors.grey.withOpacity(0.3),
+                                                  children: snapshot.data!.docs.map((e) => e.get('course')).toSet().map<Widget>((e) {
+                                                    return TouchRippleEffect(
+                                                        rippleColor: Colors.grey.withOpacity(0.3), 
                                                         onTap: (){
                                                           _selectedCourseController.selectedCourse.value = e.get('course');
                                                           setState(() {
@@ -191,7 +191,8 @@ class _AssessmentsPageState extends State<AssessmentsPage> {
                                                                 )),
                                                           ),
                                                         ),
-                                                      )
+                                                      );
+                                                  }
                                                   ).toSet().toList(),
                                                 ),
                                               )

@@ -473,7 +473,7 @@ class _BooksPageState extends State<BooksPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('${_institutionController.institution.value.type=='primary'?'Subject':'Course'}'),
+                            Text('${_institutionController.institution.value.type=='primary'?'Subject':'Course'}', style: TextStyle(color: Colors.grey, fontSize: 12),),
                             Obx(()=>Text(_selectedCourseController.selectedCourse.value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500))),
                           ],
                         )

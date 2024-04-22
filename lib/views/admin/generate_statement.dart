@@ -112,7 +112,7 @@ class StatementGenerate extends StatelessWidget {
                                         children: [
                                           pw.Padding(
                                             padding: pw.EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                                            child: pw.Text('COURSE'),
+                                            child: pw.Text('${_institutionController.institution.value.type == 'primary'?'SUBJECT':'COURSE'}'),
                                           ),
                                           pw.Padding(
                                             padding: pw.EdgeInsets.symmetric(horizontal: 20, vertical: 8),

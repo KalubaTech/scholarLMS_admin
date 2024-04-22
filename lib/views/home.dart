@@ -334,8 +334,8 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                       ),
                                       child: Container(
                                         width: double.infinity,
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                        child: ListView(
+                                          shrinkWrap: true,
                                           children: [
                                             Text('${_tutorController.tutor.value.name}' ,style: TextStyle(fontWeight: FontWeight.bold),),
                                             Text('${_tutorController.tutor.value.email}' ,style: TextStyle(fontSize: 11),),
@@ -424,7 +424,6 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                                   ),
                                                 )
                                             ),
-                                            Spacer(),
                                             MouseRegion(
                                                 cursor: SystemMouseCursors.click,
                                                 child: TouchRippleEffect(
@@ -529,7 +528,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                         children: [
                                           Icon(Icons.book, size: 16,),
                                           SizedBox(width: 20,),
-                                          Text('Books', style: TextStyle(fontSize: 14),),
+                                          Text('Library', style: TextStyle(fontSize: 14),),
                                         ],
                                       ),
                                     ),
@@ -709,9 +708,10 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                                           height: 40,
                                                           imageUrl: '${snapshot.data!.docs[index].get('photo')}',
                                                           placeholder: (c,s)=>Center(child:Text('${snapshot.data!.docs[index].get('displayName')[0]}', style: TextStyle(fontSize: 20))),
-                                                          errorWidget: (e,i,s)=>Container(child: Center(child:Text('${snapshot.data!.docs[index].get('displayName')[0]}', style: TextStyle(fontSize: 20)))),
+                                                          errorWidget: (e,i,s)=>CircleAvatar(child: Center(child:Text('${snapshot.data!.docs[index].get('displayName')[0]}', style: TextStyle(fontSize: 20)))),
                                                         ),
                                                       ),
+                                                      subtitle: Text('${_institutionController.institution.value.type=="primary"?"Grade":"Programme"} ${snapshot.data!.docs[index].get('academic_year')}  |  Class ${snapshot.data!.docs[index].get('programme')}', style: TextStyle(fontSize: 8),),
                                                       title: Text('${snapshot.data!.docs[index].get('displayName')}', style: TextStyle(fontSize: 12),),
                                                       trailing: snapshot.data!.docs[index].get('isOnline')?
                                                       CircleAvatar(
@@ -719,7 +719,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                                           backgroundColor: Colors.green
                                                       ):Container(
                                                         width: 21,
-                                                        child: Text('${timeagostr(snapshot.data!.docs[index].get('statusChangedTime'),isSubstr: true)}')
+                                                        child: Text('', style: TextStyle(fontSize: 10),)
                                                       ),
                                                     ),
                                                     Container(
@@ -752,7 +752,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin{
                                           color: Colors.grey.withOpacity(0.3)
                                         ),
                                         SizedBox(height: 10),
-                                        Text('Developed by Electrisite Technologies', style: TextStyle(fontSize: 10))
+                                        Text('Developed by KaluTech Innovations', style: TextStyle(fontSize: 10))
                                       ]
                                   )
                               )
