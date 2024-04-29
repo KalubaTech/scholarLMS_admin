@@ -7,7 +7,8 @@ import 'package:material_text_fields/utils/form_validation.dart';
 import 'package:stdominicsadmin/controllers/selectedItemsController.dart';
 import 'package:stdominicsadmin/controllers/institution_controller.dart';
 import 'package:stdominicsadmin/controllers/students_controller.dart';
-import 'package:stdominicsadmin/styles/colors.dart' as kara;
+import 'package:stdominicsadmin/customs/content_wrapper.dart';
+import 'package:stdominicsadmin/styles/colors.dart';
 import 'package:firebase_pagination/firebase_pagination.dart';
 import 'package:touch_ripple_effect/touch_ripple_effect.dart';
 import '../../customs/StudentCard.dart';
@@ -42,8 +43,16 @@ class _ManageStudentsState extends State<ManageStudents> {
 
   @override
   Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+      child: Column(
+        children: [
+          Expanded(child: ContentWrapper())
+        ],
+      ),
+    )
 
-    return Scaffold(
+      /*Scaffold(
       body: Container(
           width: double.infinity,
           height: double.infinity,
@@ -57,7 +66,7 @@ class _ManageStudentsState extends State<ManageStudents> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                color: kara.Colors.primary,
+                color: Kara.primary,
                 padding: EdgeInsets.symmetric(horizontal: 20,vertical: 6),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -65,14 +74,14 @@ class _ManageStudentsState extends State<ManageStudents> {
                     Row(
                       children: [
                         IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.arrow_back, color: Colors.white)),
-                        Text('MANAGE ${_institutionController.institution.value.type=='primary'?'PUPILS':'STUDENTS'}', style: TextStyle(color: kara.Colors.white, fontWeight: FontWeight.bold)),
+                        Text('MANAGE ${_institutionController.institution.value.type=='primary'?'PUPILS':'STUDENTS'}', style: TextStyle(color: Kara.white, fontWeight: FontWeight.bold)),
                       ],
                     ),
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 15,vertical: 4),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: kara.Colors.green)
+                        border: Border.all(color: Kara.green)
                       ),
                       child: Text('Add ${_institutionController.institution.value.type=='primary'?'Pupil':'Student'}', style: TextStyle(color: Colors.white)),
                     )
@@ -87,7 +96,7 @@ class _ManageStudentsState extends State<ManageStudents> {
                       Container(
                         width: 200,
                         decoration: BoxDecoration(
-                          color: kara.Colors.background,
+                          color: Kara.background,
                           boxShadow: [
                             BoxShadow(
                               color: Colors.grey,
@@ -190,7 +199,7 @@ class _ManageStudentsState extends State<ManageStudents> {
                                           height: 30,
                                           width: double.infinity,
                                           decoration: BoxDecoration(
-                                              color: selectedStudents.selectedItems.value.isNotEmpty?kara.Colors.red:kara.Colors.grey,
+                                              color: selectedStudents.selectedItems.value.isNotEmpty?Kara.red:Kara.grey,
                                               boxShadow: [
                                                 BoxShadow(
                                                   color: Colors.grey,
@@ -313,7 +322,7 @@ class _ManageStudentsState extends State<ManageStudents> {
                                 Container(
                                   width: double.infinity,
                                   decoration: BoxDecoration(
-                                      color: kara.Colors.background,
+                                      color: Kara.background,
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.grey,
@@ -472,6 +481,6 @@ class _ManageStudentsState extends State<ManageStudents> {
           ),
         )
       )
-    );
+    )*/;
   }
 }

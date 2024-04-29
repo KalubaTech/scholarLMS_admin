@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:touch_ripple_effect/touch_ripple_effect.dart';
 import 'package:stdominicsadmin/styles/colors.dart' as kara;
 
+import '../styles/colors.dart';
+
 
 class CustomButton extends StatelessWidget {
   Text label;
@@ -26,7 +28,7 @@ class CustomButton extends StatelessWidget {
           height: height??30,
           width: width??100,
           decoration: decoration??BoxDecoration(
-              color: kara.Colors.primary,
+              color: Kara.primary,
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(

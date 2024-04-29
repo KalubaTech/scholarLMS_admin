@@ -6,7 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:stdominicsadmin/customs/custom_button.dart';
 import 'package:touch_ripple_effect/touch_ripple_effect.dart';
-import 'package:stdominicsadmin/styles/colors.dart' as kara;
+import 'package:stdominicsadmin/styles/colors.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/tutorController.dart';
@@ -109,7 +109,7 @@ class _NoticeBoardState extends State<NoticeBoard> {
                           }
                         },
                         rippleColor: Colors.green,
-                        backgroundColor: kara.Colors.green,
+                        backgroundColor: Kara.green,
                         borderRadius: BorderRadius.circular(20),
                         child: Container(
                             width: 200,
@@ -167,7 +167,7 @@ class _NoticeBoardState extends State<NoticeBoard> {
                                                                       child: Column(
                                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                                         children: [
-                                                                          Text('Edit', style: GoogleFonts.abel(fontSize: 20, fontWeight: FontWeight.bold, color: kara.Colors.primary),),
+                                                                          Text('Edit', style: GoogleFonts.abel(fontSize: 20, fontWeight: FontWeight.bold, color: Kara.primary),),
                                                                           SizedBox(height: 20),
                                                                           Container(
                                                                             decoration: BoxDecoration(

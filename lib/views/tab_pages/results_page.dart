@@ -9,7 +9,7 @@ import 'package:searchable_listview/searchable_listview.dart';
 import 'package:stdominicsadmin/helpers/methods.dart';
 import 'package:stdominicsadmin/models/student_model.dart';
 import 'package:touch_ripple_effect/touch_ripple_effect.dart';
-import 'package:stdominicsadmin/styles/colors.dart' as kara;
+import 'package:stdominicsadmin/styles/colors.dart';
 import '../../controllers/selectedCourseController.dart';
 import '../../controllers/students_controller.dart';
 import '../../controllers/tutorController.dart';
@@ -54,7 +54,7 @@ class _ResultsPageState extends State<ResultsPage> {
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                   height: 112,
                   decoration: BoxDecoration(
-                    color: kara.Colors.background,
+                    color: Kara.background,
                       borderRadius: BorderRadius.circular(0)
                   ),
                   child: Row(
@@ -81,7 +81,7 @@ class _ResultsPageState extends State<ResultsPage> {
                                         onTap: (){
                                           Get.defaultDialog(
                                               title: 'Select ${Creds().coursesubect()}',
-                                              titleStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: kara.Colors.primary),
+                                              titleStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Kara.primary),
                                               titlePadding: EdgeInsets.symmetric(vertical: 20),
                                               content: Container(
                                                 height: 250,
@@ -177,14 +177,14 @@ class _ResultsPageState extends State<ResultsPage> {
                                                                 )
                                                             ),
                                                             SizedBox(width: 20),
-                                                            Expanded(child: Text(user.displayName)),
+                                                            Expanded(child: Text(user.name)),
                                                           ],
                                                         )
                                                     ),
                                                   ),
                                                 );
                                               },
-                                              filter: (value) => _studentsController.students.value.where((element) => element.displayName.toLowerCase().contains(value),).toList(),
+                                              filter: (value) => _studentsController.students.value.where((element) => element.name.toLowerCase().contains(value),).toList(),
                                               emptyWidget:  Container(),
                                               inputDecoration: InputDecoration(
                                                 contentPadding: EdgeInsets.symmetric(horizontal: 20),
@@ -214,7 +214,7 @@ class _ResultsPageState extends State<ResultsPage> {
                                     child: Row(
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
-                                        Expanded(child: Text('${selectedStudent == null ? "Select ${_institutionController.institution.value.type=='primary'?'Pupil':'Student'}":selectedStudent!.displayName}', overflow: TextOverflow.ellipsis)),
+                                        Expanded(child: Text('${selectedStudent == null ? "Select ${_institutionController.institution.value.type=='primary'?'Pupil':'Student'}":selectedStudent!.name}', overflow: TextOverflow.ellipsis)),
                                       ],
                                     )
                                 ),
@@ -300,7 +300,7 @@ class _ResultsPageState extends State<ResultsPage> {
                                                                   height: 50,
                                                                   width: 80,
                                                                   decoration: BoxDecoration(
-                                                                      color: kara.Colors.green,
+                                                                      color: Kara.green,
                                                                       borderRadius: BorderRadius.circular(10)
                                                                   ),
                                                                   child: Center(
@@ -366,7 +366,7 @@ class _ResultsPageState extends State<ResultsPage> {
                             StreamBuilder(
                                 stream: FirebaseFirestore.instance.collection('results_reason')
                                     .
-                                     where('institutionID', isEqualTo: _institutionController.institution.value.id)
+                                     where('institutionID', isEqualTo: _institutionController.institution.value.uid)
                                     .snapshots(),
                                 builder: (context, snapshot) {
                                   return snapshot.hasData&&snapshot.data!.size>0?Container(
@@ -400,11 +400,11 @@ class _ResultsPageState extends State<ResultsPage> {
                                   FirebaseFirestore.instance.collection('results').add(
                                       {
                                         'student':selectedStudent!.email,
-                                        'student_id':selectedStudent!.id,
+                                        'student_id':selectedStudent!.uid,
                                         'course':_selectedCourseController.selectedCourse.value,
                                         'marks':marksController.text,
                                         'reason':selectedReason,
-                                        'academic_year': selectedStudent!.academic_year,
+                                        'academic_year': selectedStudent!.academicYear,
                                         'tutor': _tutorController.tutor.value.uid,
                                         'datetime':'${DateTime.now()}'
                                       }
@@ -422,7 +422,7 @@ class _ResultsPageState extends State<ResultsPage> {
                                     width: 100,
                                     height: 49,
                                     decoration: BoxDecoration(
-                                        color: kara.Colors.green,
+                                        color: Kara.green,
                                         borderRadius: BorderRadius.circular(5)
                                     ),
                                     child: Center(

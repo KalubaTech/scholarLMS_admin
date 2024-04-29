@@ -111,7 +111,7 @@ class _StudentRegistrationFormState extends State<StudentRegistrationForm> {
                               Text('Academic Year:', style: GoogleFonts.abel(fontWeight: FontWeight.bold, fontSize: 12)),
                               StreamBuilder(
                                   stream: FirebaseFirestore.instance.collection('institutions')
-                                      .doc(_institutionController.institution.value.id).snapshots(),
+                                      .doc(_institutionController.institution.value.uid).snapshots(),
                                   builder: (context, snapshot) {
                                     return snapshot.hasData?DropdownSearch<String>(
                                       items: snapshot.data!.get('academic_years').map<String>((e) => e.toString()).toList(),
@@ -153,7 +153,7 @@ class _StudentRegistrationFormState extends State<StudentRegistrationForm> {
                               Text('Programme:', style: GoogleFonts.abel(fontWeight: FontWeight.bold, fontSize: 13)),
                               StreamBuilder(
                                 stream: FirebaseFirestore.instance.collection('programmes')
-                                    .where('institutionID',isEqualTo: _institutionController.institution.value.id).snapshots(),
+                                    .where('institutionID',isEqualTo: _institutionController.institution.value.uid).snapshots(),
                                 builder: (context, snapshot) {
                                   return snapshot.hasData&&snapshot.data!.size>0?DropdownSearch<String>(
                                     items: snapshot.data!.docs.map<String>((e) => e.get('name').toString()).toList(),
@@ -274,7 +274,7 @@ class _StudentRegistrationFormState extends State<StudentRegistrationForm> {
                               'password':'',
                               'statusChangedTime': '${DateTime.now()}',
                               'isOnline': false,
-                              'institutionID':_institutionController.institution.value.id
+                              'institutionID':_institutionController.institution.value.uid
                             }).then((value){
                                 student_name_controller.clear();
                                 student_email_controller.clear();

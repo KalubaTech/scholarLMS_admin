@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:stdominicsadmin/controllers/selectedCourseController.dart';
 import 'package:get/get.dart';
 import 'package:stdominicsadmin/controllers/students_controller.dart';
-import 'package:stdominicsadmin/styles/colors.dart' as kara;
+import 'package:stdominicsadmin/styles/colors.dart';
 import 'package:timeago/timeago.dart';
 import 'package:touch_ripple_effect/touch_ripple_effect.dart';
 
@@ -33,7 +33,7 @@ class AssessmentSubmitted extends StatelessWidget {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               decoration: BoxDecoration(
-                color: kara.Colors.primary
+                color: Kara.primary
               ),
               child: Row(
                 children: [
@@ -204,7 +204,7 @@ class AssessmentSubmitted extends StatelessWidget {
                                                     Column(
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
-                                                        Text('${student.displayName}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),),
+                                                        Text('${student.name}', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),),
                                                         Row(
                                                           children: [
                                                             Text('Submitted on: '),
@@ -242,7 +242,7 @@ class AssessmentSubmitted extends StatelessWidget {
                                                             return snapshot.hasData && snapshot.data!.size>0 ?
                                                             Column(
                                                               children: [
-                                                                Text('Marks', style: TextStyle(color: kara.Colors.primary),),
+                                                                Text('Marks', style: TextStyle(color: Kara.primary),),
                                                                 Text(snapshot.data!.docs.first.get('marks'), style: GoogleFonts.abel(fontSize: 25, color: Colors.blue, fontWeight: FontWeight.bold),),
                                                               ],
                                                             ):Container();

@@ -11,7 +11,7 @@ import '../../controllers/institution_controller.dart';
 import '../../controllers/tutorController.dart';
 import 'dart:html' as html;
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:stdominicsadmin/styles/colors.dart' as kara;
+import 'package:stdominicsadmin/styles/colors.dart';
 import '../../controllers/selectedCourseController.dart';
 import '../../customs/custom_button.dart';
 import '../../helpers/creds.dart';
@@ -160,7 +160,7 @@ class _AssessmentsPageState extends State<AssessmentsPage> {
                                         onTap: (){
                                           Get.defaultDialog(
                                               title: 'Select ${Creds().coursesubect()}',
-                                              titleStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: kara.Colors.primary),
+                                              titleStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Kara.primary),
                                               titlePadding: EdgeInsets.symmetric(vertical: 20),
                                               content: Container(
                                                 height: 250,
@@ -212,7 +212,7 @@ class _AssessmentsPageState extends State<AssessmentsPage> {
                         onTap: (){
                           Get.defaultDialog(
                               title: 'New Assignment',
-                              titleStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: kara.Colors.blue),
+                              titleStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Kara.blue),
                               titlePadding: EdgeInsets.symmetric(vertical: 20),
                               content: StatefulBuilder(
                                   builder: (context, state) {
@@ -361,7 +361,7 @@ class _AssessmentsPageState extends State<AssessmentsPage> {
                                                                                     height: 50,
                                                                                     width: 80,
                                                                                     decoration: BoxDecoration(
-                                                                                        color: kara.Colors.green,
+                                                                                        color: Kara.green,
                                                                                         borderRadius: BorderRadius.circular(10)
                                                                                     ),
                                                                                     child: Center(
@@ -552,7 +552,7 @@ class _AssessmentsPageState extends State<AssessmentsPage> {
                                               Get.back();
                                               Get.defaultDialog(
                                                   title: 'Uploading...',
-                                                  titleStyle: TextStyle(fontSize: 14,fontWeight: FontWeight.bold,color: kara.Colors.blue),
+                                                  titleStyle: TextStyle(fontSize: 14,fontWeight: FontWeight.bold,color: Kara.blue),
                                                   titlePadding: EdgeInsets.only(top: 20),
                                                   content: Container(
                                                       child: Obx(()=> LinearProgressIndicator(value: uploadprogress.value/100,minHeight: 10,))
@@ -565,7 +565,7 @@ class _AssessmentsPageState extends State<AssessmentsPage> {
                                             child: Container(
                                               decoration: BoxDecoration(
                                                   borderRadius: BorderRadius.circular(20),
-                                                  color: kara.Colors.green
+                                                  color: Kara.green
                                               ),
                                               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                                               child: Center(
@@ -587,7 +587,7 @@ class _AssessmentsPageState extends State<AssessmentsPage> {
                           decoration: BoxDecoration(
                               border: Border.all(color: Colors.grey),
                               borderRadius: BorderRadius.circular(20),
-                              color: kara.Colors.green
+                              color: Kara.green
                           ),
                           child: Row(
                             children: [
@@ -606,7 +606,7 @@ class _AssessmentsPageState extends State<AssessmentsPage> {
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                   decoration: BoxDecoration(
-                      color: kara.Colors.background,
+                      color: Kara.background,
                       borderRadius: BorderRadius.circular(0)
                   ),
                   child: Column(

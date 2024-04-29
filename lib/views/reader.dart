@@ -6,7 +6,7 @@ import 'package:stdominicsadmin/controllers/tutorController.dart';
 import 'package:touch_ripple_effect/touch_ripple_effect.dart';
 import "package:webview_universal/webview_universal.dart";
 import '../models/book_model.dart';
-import '../styles/colors.dart' as kara;
+import '../styles/colors.dart';
 import 'package:get/get.dart';
 
 class Reader extends StatefulWidget {
@@ -43,7 +43,7 @@ class _ReaderState extends State<Reader> {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(0),
-            border: Border.all(color: kara.Colors.primary)
+            border: Border.all(color: Kara.primary)
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,7 +64,7 @@ class _ReaderState extends State<Reader> {
                   ],
                 ),
                 decoration: BoxDecoration(
-                    color: kara.Colors.primary,
+                    color: Kara.primary,
                 ),
               ),
               Expanded(
@@ -92,7 +92,7 @@ class _ReaderState extends State<Reader> {
                                 children: [
                                   Container(
                                     decoration: BoxDecoration(
-                                      color: kara.Colors.background,
+                                      color: Kara.background,
                                       boxShadow: [
                                         BoxShadow(color: Colors.grey,blurRadius: 2)
                                       ]

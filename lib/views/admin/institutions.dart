@@ -54,7 +54,19 @@ class Institutions extends StatelessWidget {
                                 child: ListView.builder(
                                     itemCount: snapshot.data!.size,
                                     itemBuilder: (context,index){
-                                      InstitutionModel institution = InstitutionModel(id: snapshot.data!.docs[index].id, name: snapshot.data!.docs[index].get('name'), admin: snapshot.data!.docs[index].get('admin'), logo: snapshot.data!.docs[index].get('logo'), motto: snapshot.data!.docs[index].get('motto'), type: snapshot.data!.docs[index].get('type'));
+                                      InstitutionModel institution = InstitutionModel(
+                                          uid: snapshot.data!.docs[index].id,
+                                          name: snapshot.data!.docs[index].get('name'),
+                                          admin: snapshot.data!.docs[index].get('admin'),
+                                          logo: snapshot.data!.docs[index].get('logo'),
+                                          motto: snapshot.data!.docs[index].get('motto'),
+                                          type: snapshot.data!.docs[index].get('type'),
+                                          status: snapshot.data!.docs[index].get('status'),
+                                          province: snapshot.data!.docs[index].get('province'),
+                                          district: snapshot.data!.docs[index].get('district'),
+                                          country: snapshot.data!.docs[index].get('country'),
+                                          subscriptionType: snapshot.data!.docs[index].get('subscription')
+                                      );
                                       return ListTile(
                                         leading: CachedNetworkImage(
                                             imageUrl: '${institution.logo}',

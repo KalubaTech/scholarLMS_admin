@@ -2,8 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:stdominicsadmin/customs/content_wrapper.dart';
 import 'package:stdominicsadmin/customs/custom_button.dart';
-import 'package:stdominicsadmin/styles/colors.dart' as kara;
+import 'package:stdominicsadmin/styles/colors.dart';
 
 import 'package:grouped_list/grouped_list.dart';
 import '../controllers/institution_controller.dart';
@@ -28,22 +29,14 @@ class MyClasses extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-         padding: EdgeInsets.all(0),
+         color: Kara.background,
+         padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
          width: double.infinity,
          height: double.infinity,
          child: Column(
            children: [
-             Container(
-               width: double.infinity,
-               color: kara.Colors.primary,
-               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-               child: Row(
-                 children: [
-                   IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.arrow_back, color: Colors.white))
-                 ],
-               ),
-             ),
-             Expanded(
+              Expanded(child: ContentWrapper())
+            /* Expanded(
                  child: Container(
                    padding: EdgeInsets.symmetric(horizontal: 20),
                    child: Row(
@@ -285,7 +278,7 @@ class MyClasses extends StatelessWidget {
                      ],
                    ),
                  )
-             )
+             )*/
            ],
          ),
       )

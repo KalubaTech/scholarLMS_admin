@@ -1,29 +1,62 @@
 
 import 'dart:html' as html;
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_bubbles/bubbles/bubble_special_three.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_timetable/flutter_timetable.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:stdominicsadmin/controllers/teachers_controller.dart';
+import 'package:stdominicsadmin/helpers/load_data.dart';
+import 'package:stdominicsadmin/models/timetable_item_data.dart';
+import 'package:stdominicsadmin/views/home.dart';
 import 'package:touch_ripple_effect/touch_ripple_effect.dart';
 import 'package:stdominicsadmin/styles/colors.dart' as kara;
+import '../controllers/announcements_controller.dart';
+import '../controllers/guardians_controller.dart';
+import '../controllers/my_classes_controller.dart';
+import '../controllers/reasons_controller.dart';
+import '../controllers/results_controller.dart';
 import '../controllers/selectedCourseController.dart';
 import '../controllers/selected_guardian_controller.dart';
+import '../controllers/students_controller.dart';
+import '../controllers/teacher_controller.dart';
+import '../controllers/timetable_controller.dart';
 import '../controllers/tutorController.dart';
 import '../controllers/institution_controller.dart';
+import '../models/teacher_model.dart';
+import '../models/timetable_model.dart';
+import '../styles/colors.dart';
 import 'date_formater.dart';
 
 class Methods {
 
+  FirebaseFirestore fs = FirebaseFirestore.instance;
+
   InstitutionController _institutionController = Get.find();
-  TutorController _tutorController = Get.find();
+  TeacherController _tutorController = Get.find();
+  TeachersController _teachersController = Get.find();
   SelectedCourseController _selectedCourseController = Get.find();
+  TeacherController teacherController = Get.find();
+  InstitutionController institutionController = Get.find();
+  MyClassesController myClassesController = Get.find();
+  StudentsController _studentsController = Get.find();
+  ResultsController _resultsController = Get.find();
+  ReasonsController _reasonsController = Get.find();
+  GuardiansController _guardiansController = Get.find();
+
+  AnnouncementsController _announcementsController = Get.find();
+  TimetableDataController _timetableController = Get.find();
+
+  LoadData loadData = LoadData();
 
   var selectedProfile = ''.obs;
   var uploadprogress = 0.0.obs;
@@ -51,7 +84,7 @@ class Methods {
       await uploadTask.whenComplete(() async {
         // Get the download URL of the uploaded file
         final String downloadUrl = await storageRef.getDownloadURL();
-        FirebaseFirestore.instance.collection('tutor').doc(_tutorController.tutor.value.uid).update(
+        FirebaseFirestore.instance.collection('tutor').doc(_tutorController.teacher.value.uid).update(
             {
               'photo':downloadUrl
             }
@@ -100,7 +133,7 @@ class Methods {
       await uploadTask.whenComplete(() async {
         // Get the download URL of the uploaded file
         final String downloadUrl = await storageRef.getDownloadURL();
-        FirebaseFirestore.instance.collection('institutions').doc(_tutorController.tutor.value.institutionID).update(
+        FirebaseFirestore.instance.collection('institutions').doc(_tutorController.teacher.value.institutionID).update(
             {
               'logo':downloadUrl
             }
@@ -195,8 +228,8 @@ class Methods {
                           if(documentSnapshots.hasData && documentSnapshots.data!.size>0){
 
                             List<DocumentSnapshot> snapshot = documentSnapshots.data!.docs.where((element) =>
-                            (element.get('sender')==document.get('email') && element.get('receiver')==_tutorController.tutor.value.email) ||
-                                (element.get('sender')==_tutorController.tutor.value.email &&
+                            (element.get('sender')==document.get('email') && element.get('receiver')==_tutorController.teacher.value.email) ||
+                                (element.get('sender')==_tutorController.teacher.value.email &&
                                     element.get('receiver')==document.get('email'))
                             ).toList();
 
@@ -211,15 +244,15 @@ class Methods {
 
                                   },
                                   child: BubbleSpecialThree(
-                                    isSender: snapshot[index].get('sender') ==_tutorController.tutor
+                                    isSender: snapshot[index].get('sender') ==_tutorController.teacher
                                         .value.email?true:false,
                                     text: '${snapshot[index].get('message')}',
-                                    color: snapshot[index].get('sender') ==_tutorController.tutor
+                                    color: snapshot[index].get('sender') ==_tutorController.teacher
                                         .value.email?Color(0xFF1B97F3):Color(
                                         0xFFBCD1DC),
                                     tail: true,
                                     textStyle: TextStyle(
-                                        color: snapshot[index].get('sender') ==_tutorController.tutor
+                                        color: snapshot[index].get('sender') ==_tutorController.teacher
                                             .value.email?Colors.white:Colors.black,
                                         fontSize: 16
                                     ),
@@ -275,7 +308,7 @@ class Methods {
                                         counter = value.docs.last.get('counter') + 1;
                                         Map<String,dynamic> data = {
                                           'counter': counter,
-                                          'sender': _tutorController.tutor.value.email,
+                                          'sender': _tutorController.teacher.value.email,
                                           'message': messageController.text,
                                           'receiver':document.get('email'),
                                           'datetime':'${DateTime.now()}',
@@ -403,7 +436,7 @@ class Methods {
                                   padding: EdgeInsets.symmetric(horizontal: 20),
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(5),
-                                      color: kara.Colors.primary
+                                      color: Kara.primary
                                   ),
                                   child: Center(child: Text('Message', style: TextStyle(color: Colors.white),)),
                                 ),
@@ -633,7 +666,7 @@ class Methods {
                             child: Container(
                               child: StreamBuilder(
                                 stream: FirebaseFirestore.instance
-                                    .collection('grading_system').where('institutionID', isEqualTo: _institutionController.institution.value.id)
+                                    .collection('grading_system').where('institutionID', isEqualTo: _institutionController.institution.value.uid)
                                     .snapshots(),
                                 builder: (BuildContext context, snapshot) {
                                   return snapshot.hasData && snapshot.data!.size>0?
@@ -689,7 +722,7 @@ class Methods {
                       onTap: (){
                         FirebaseFirestore.instance.collection('grading_system')
                             .add({
-                              'institutionID': _institutionController.institution.value.id,
+                              'institutionID': _institutionController.institution.value.uid,
                               'from':fromController.text,
                               'to':toController.text,
                               'grade': gradeController.text,
@@ -702,7 +735,7 @@ class Methods {
                           width: 100,
                           height: 40,
                           decoration: BoxDecoration(
-                              color: kara.Colors.primary,
+                              color: Kara.primary,
                               borderRadius: BorderRadius.circular(10),
                               boxShadow: [
                                 BoxShadow(blurRadius: 2)
@@ -737,14 +770,14 @@ class Methods {
             child: Column(
                 children: [
                   Container(
-                      color: kara.Colors.grey.withOpacity(0.3),
+                      color: Kara.grey.withOpacity(0.3),
                       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           StreamBuilder(
                               stream: FirebaseFirestore.instance.collection('courses').
-                              where('institutionID', isEqualTo: _institutionController.institution.value.id).
+                              where('institutionID', isEqualTo: _institutionController.institution.value.uid).
                               snapshots(),
                               builder: (context, snapshot) {
                                 if (snapshot.hasData&&snapshot.data!.size>0) {
@@ -787,7 +820,7 @@ class Methods {
                                   FirebaseFirestore.instance.collection('courses').add({
                                     'course':courseController.text.toLowerCase(),
                                     'description':'Course',
-                                    'institutionID':_institutionController.institution.value.id
+                                    'institutionID':_institutionController.institution.value.uid
                                   }).then((value){
                                     courseController.text = '';
                                   });
@@ -795,7 +828,7 @@ class Methods {
                                 borderRadius: BorderRadius.circular(20),
                                 child: Container(
                                   decoration: BoxDecoration(
-                                      color: kara.Colors.green,
+                                      color: Kara.green,
                                       borderRadius: BorderRadius.circular(20)
                                   ),
                                   height: 35,
@@ -812,7 +845,7 @@ class Methods {
                       child: Container(
                           color: Colors.white,
                           child: StreamBuilder(
-                              stream: FirebaseFirestore.instance.collection('courses').where('institutionID', isEqualTo: _institutionController.institution.value.id).snapshots(),
+                              stream: FirebaseFirestore.instance.collection('courses').where('institutionID', isEqualTo: _institutionController.institution.value.uid).snapshots(),
                               builder: (content,snapshot){
                                 if(snapshot.hasData && snapshot.data!.docs.isNotEmpty){
                                   return ListView.builder(
@@ -881,7 +914,7 @@ class Methods {
                                                                                 rippleColor: Colors.green,
                                                                                 child: Container(
                                                                                     decoration: BoxDecoration(
-                                                                                        color: kara.Colors.green,
+                                                                                        color: Kara.green,
                                                                                         borderRadius: BorderRadius.circular(20)
                                                                                     ),
                                                                                     width: double.infinity,
@@ -935,7 +968,7 @@ class Methods {
                                                                                         rippleColor: Colors.green,
                                                                                         child: Container(
                                                                                             decoration: BoxDecoration(
-                                                                                                color: kara.Colors.green,
+                                                                                                color: Kara.green,
                                                                                                 borderRadius: BorderRadius.circular(20)
                                                                                             ),
                                                                                             width: double.infinity,
@@ -958,7 +991,7 @@ class Methods {
                                                                                         rippleColor: Colors.green,
                                                                                         child: Container(
                                                                                             decoration: BoxDecoration(
-                                                                                                color: kara.Colors.green,
+                                                                                                color: Kara.green,
                                                                                                 borderRadius: BorderRadius.circular(20)
                                                                                             ),
                                                                                             width: double.infinity,
@@ -1020,14 +1053,14 @@ class Methods {
             child: Column(
                 children: [
                   Container(
-                      color: kara.Colors.grey.withOpacity(0.3),
+                      color: Kara.grey.withOpacity(0.3),
                       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           StreamBuilder(
                               stream: FirebaseFirestore.instance.collection('tutor').
-                              where('institutionID', isEqualTo: _institutionController.institution.value.id).
+                              where('institutionID', isEqualTo: _institutionController.institution.value.uid).
                               snapshots(),
                               builder: (context, snapshot) {
                                 return snapshot.hasData&&snapshot.data!.size>0?Text('${snapshot.data!.size} ${_institutionController.institution.value.type=='primary'?'Teachers':'Lecturers'} available'):Container();
@@ -1099,7 +1132,7 @@ class Methods {
                                                 Expanded(
                                                   child: StreamBuilder(
                                                       stream: FirebaseFirestore.instance.collection('courses').
-                                                          where('institutionID', isEqualTo: _institutionController.institution.value.id).snapshots(),
+                                                          where('institutionID', isEqualTo: _institutionController.institution.value.uid).snapshots(),
                                                       builder: (context,snapshot){
                                                         return snapshot.hasData && snapshot.data!.size>0?ListView.builder(
                                                           itemBuilder: (context,index){
@@ -1142,7 +1175,7 @@ class Methods {
                                                               'email': emailController.text,
                                                               'password':'123456',
                                                               'courses':_addedCourses,
-                                                              'institutionID':_institutionController.institution.value.id,
+                                                              'institutionID':_institutionController.institution.value.uid,
                                                               'photo': '' 
                                                             }
                                                         ).then((value)=>Get.back());
@@ -1153,7 +1186,7 @@ class Methods {
                                                         width:  double.infinity,
                                                         height: 30,
                                                         decoration: BoxDecoration(
-                                                            color: kara.Colors.green,
+                                                            color: Kara.green,
                                                             borderRadius: BorderRadius.circular(20)
                                                         ),
                                                         child: Center(
@@ -1173,13 +1206,13 @@ class Methods {
                                   padding: EdgeInsets.symmetric(horizontal: 10),
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20),
-                                      border: Border.all(color: kara.Colors.grey, width: 0.5)
+                                      border: Border.all(color: Kara.grey, width: 0.5)
                                   ),
                                   child: Row(
                                     children: [
-                                      Text('Add ${_institutionController.institution.value.type=='primary'?'Teacher':'Lecturer'}', style: TextStyle(color: kara.Colors.primary)),
+                                      Text('Add ${_institutionController.institution.value.type=='primary'?'Teacher':'Lecturer'}', style: TextStyle(color: Kara.primary)),
                                       SizedBox(width: 10),
-                                      Icon(Icons.add, color: kara.Colors.primary)
+                                      Icon(Icons.add, color: Kara.primary)
                                     ],
                                   ),
                                 ),
@@ -1193,7 +1226,7 @@ class Methods {
                           color: Colors.white,
                           child: StreamBuilder(
                               stream: FirebaseFirestore.instance.collection('tutor')
-                                  .where('institutionID', isEqualTo: _tutorController.tutor.value.institutionID)
+                                  .where('institutionID', isEqualTo: _tutorController.teacher.value.institutionID)
                                   .snapshots(),
                               builder: (content,snapshot){
                                 if(snapshot.hasData && snapshot.data!.docs.isNotEmpty){
@@ -1253,7 +1286,7 @@ class Methods {
                                                                                         rippleColor: Colors.green,
                                                                                         child: Container(
                                                                                             decoration: BoxDecoration(
-                                                                                                color: kara.Colors.green,
+                                                                                                color: Kara.green,
                                                                                                 borderRadius: BorderRadius.circular(20)
                                                                                             ),
                                                                                             width: double.infinity,
@@ -1276,7 +1309,7 @@ class Methods {
                                                                                         rippleColor: Colors.green,
                                                                                         child: Container(
                                                                                             decoration: BoxDecoration(
-                                                                                                color: kara.Colors.green,
+                                                                                                color: Kara.green,
                                                                                                 borderRadius: BorderRadius.circular(20)
                                                                                             ),
                                                                                             width: double.infinity,
@@ -1338,7 +1371,7 @@ class Methods {
             child: Column(
                 children: [
                   Container(
-                      color: kara.Colors.grey.withOpacity(0.3),
+                      color: Kara.grey.withOpacity(0.3),
                       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
@@ -1411,7 +1444,7 @@ class Methods {
                                                         width:  double.infinity,
                                                         height: 30,
                                                         decoration: BoxDecoration(
-                                                            color: kara.Colors.green,
+                                                            color: Kara.green,
                                                             borderRadius: BorderRadius.circular(20)
                                                         ),
                                                         child: Center(
@@ -1431,13 +1464,13 @@ class Methods {
                                   padding: EdgeInsets.symmetric(horizontal: 10),
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20),
-                                      border: Border.all(color: kara.Colors.grey, width: 0.5)
+                                      border: Border.all(color: Kara.grey, width: 0.5)
                                   ),
                                   child: Row(
                                     children: [
-                                      Text('Add New Guardian', style: TextStyle(color: kara.Colors.primary)),
+                                      Text('Add New Guardian', style: TextStyle(color: Kara.primary)),
                                       SizedBox(width: 10),
-                                      Icon(Icons.add, color: kara.Colors.primary)
+                                      Icon(Icons.add, color: Kara.primary)
                                     ],
                                   ),
                                 ),
@@ -1604,14 +1637,14 @@ class Methods {
             child: Column(
                 children: [
                   Container(
-                      color: kara.Colors.grey.withOpacity(0.3),
+                      color: Kara.grey.withOpacity(0.3),
                       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           StreamBuilder(
                               stream: FirebaseFirestore.instance.collection('programmes').
-                              where('institutionID', isEqualTo: _institutionController.institution.value.id).
+                              where('institutionID', isEqualTo: _institutionController.institution.value.uid).
                               snapshots(),
                               builder: (context, snapshot) {
                                 return snapshot.hasData&&snapshot.data!.size>0?Text('${snapshot.data!.size} ${_institutionController.institution.value.type=='primary'?'Classes':'Programmes'} available'):Container();
@@ -1662,7 +1695,7 @@ class Methods {
                                                         FirebaseFirestore.instance.collection('programmes').add(
                                                             {
                                                               'name':programmeController.text,
-                                                              'institutionID':_institutionController.institution.value.id
+                                                              'institutionID':_institutionController.institution.value.uid
                                                             }
                                                         ).then((value)=>Get.back());
                                                       }
@@ -1672,7 +1705,7 @@ class Methods {
                                                         width:  double.infinity,
                                                         height: 30,
                                                         decoration: BoxDecoration(
-                                                            color: kara.Colors.green,
+                                                            color: Kara.green,
                                                             borderRadius: BorderRadius.circular(20)
                                                         ),
                                                         child: Center(
@@ -1692,13 +1725,13 @@ class Methods {
                                   padding: EdgeInsets.symmetric(horizontal: 10),
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(20),
-                                      border: Border.all(color: kara.Colors.grey, width: 0.5)
+                                      border: Border.all(color: Kara.grey, width: 0.5)
                                   ),
                                   child: Row(
                                     children: [
-                                      Text('Add ${_institutionController.institution.value.type=='primary'?'Class':'Programme'}', style: TextStyle(color: kara.Colors.primary)),
+                                      Text('Add ${_institutionController.institution.value.type=='primary'?'Class':'Programme'}', style: TextStyle(color: Kara.primary)),
                                       SizedBox(width: 10),
-                                      Icon(Icons.add, color: kara.Colors.primary)
+                                      Icon(Icons.add, color: Kara.primary)
                                     ],
                                   ),
                                 ),
@@ -1713,7 +1746,7 @@ class Methods {
                           child: StreamBuilder(
                               stream: FirebaseFirestore.instance
                                   .collection('programmes')
-                                  .where('institutionID', isEqualTo: _tutorController.tutor.value.institutionID)
+                                  .where('institutionID', isEqualTo: _tutorController.teacher.value.institutionID)
                                   .snapshots(),
                               builder: (content,snapshot){
                                 if(snapshot.hasData && snapshot.data!.docs.isNotEmpty){
@@ -1773,7 +1806,7 @@ class Methods {
                                                                                         rippleColor: Colors.green,
                                                                                         child: Container(
                                                                                             decoration: BoxDecoration(
-                                                                                                color: kara.Colors.green,
+                                                                                                color: Kara.green,
                                                                                                 borderRadius: BorderRadius.circular(20)
                                                                                             ),
                                                                                             width: double.infinity,
@@ -1796,7 +1829,7 @@ class Methods {
                                                                                         rippleColor: Colors.green,
                                                                                         child: Container(
                                                                                             decoration: BoxDecoration(
-                                                                                                color: kara.Colors.green,
+                                                                                                color: Kara.green,
                                                                                                 borderRadius: BorderRadius.circular(20)
                                                                                             ),
                                                                                             width: double.infinity,
@@ -1882,7 +1915,7 @@ class Methods {
                       child: TouchRippleEffect(
                         onTap: (){
                           if(institutionNameController.text.isNotEmpty){
-                            FirebaseFirestore.instance.collection('institutions').doc(_institutionController.institution.value.id).update(
+                            FirebaseFirestore.instance.collection('institutions').doc(_institutionController.institution.value.uid).update(
                                 {
                                   'name':institutionNameController.text,
                                 }
@@ -1894,7 +1927,7 @@ class Methods {
                             width:  double.infinity,
                             height: 30,
                             decoration: BoxDecoration(
-                                color: kara.Colors.green,
+                                color: Kara.green,
                                 borderRadius: BorderRadius.circular(20)
                             ),
                             child: Center(
@@ -1948,7 +1981,7 @@ class Methods {
                       child: TouchRippleEffect(
                         onTap: (){
                           if(mottoController.text.isNotEmpty){
-                            FirebaseFirestore.instance.collection('institutions').doc(_institutionController.institution.value.id).update(
+                            FirebaseFirestore.instance.collection('institutions').doc(_institutionController.institution.value.uid).update(
                                 {
                                   'motto':mottoController.text,
                                 }
@@ -1960,7 +1993,7 @@ class Methods {
                             width:  double.infinity,
                             height: 30,
                             decoration: BoxDecoration(
-                                color: kara.Colors.green,
+                                color: Kara.green,
                                 borderRadius: BorderRadius.circular(20)
                             ),
                             child: Center(
@@ -1975,7 +2008,7 @@ class Methods {
       );
     }
     void editTutorName(){
-      userNameController.text = _tutorController.tutor.value.name;
+      userNameController.text = _tutorController.teacher.value.fullname;
       Get.defaultDialog(
           title: 'Edit',
           titleStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -2014,7 +2047,7 @@ class Methods {
                       child: TouchRippleEffect(
                         onTap: (){
                           if(userNameController.text.isNotEmpty){
-                            FirebaseFirestore.instance.collection('tutor').doc(_tutorController.tutor.value.uid).update(
+                            FirebaseFirestore.instance.collection('tutor').doc(_tutorController.teacher.value.uid).update(
                                 {
                                   'name':userNameController.text,
                                 }
@@ -2026,7 +2059,7 @@ class Methods {
                             width:  double.infinity,
                             height: 30,
                             decoration: BoxDecoration(
-                                color: kara.Colors.green,
+                                color: Kara.green,
                                 borderRadius: BorderRadius.circular(20)
                             ),
                             child: Center(
@@ -2041,7 +2074,7 @@ class Methods {
       );
     }
     void changePassword(BuildContext context){
-      _tutorController.tutor.value.name;
+      _tutorController.teacher.value.fullname;
       TextEditingController newPasswordController = TextEditingController();
       TextEditingController oldPasswordController = TextEditingController();
       Get.defaultDialog(
@@ -2093,12 +2126,12 @@ class Methods {
                     cursor: SystemMouseCursors.click,
                     child: TouchRippleEffect(
                       onTap: (){
-                        if(oldPasswordController.text == _tutorController.tutor.value.password){
+                        if(oldPasswordController.text == _tutorController.teacher.value.password){
                           if(newPasswordController.text.isNotEmpty){
-                            FirebaseFirestore.instance.collection('tutor').doc(_tutorController.tutor.value.uid)
+                            FirebaseFirestore.instance.collection('tutor').doc(_tutorController.teacher.value.uid)
                                 .update({'password':newPasswordController.text})
                                 .then((value){
-                              _tutorController.tutor.value.password = newPasswordController.text;
+                              _tutorController.teacher.value.password = newPasswordController.text;
                               shownackbar('Password Changed successfully!', context);
                               Get.back();
                             });
@@ -2140,12 +2173,104 @@ class Methods {
 
     preselectCourse()async{
       await FirebaseFirestore.instance.collection('my_classes')
-          .where('tutor', isEqualTo:_tutorController.tutor.value.uid)
+          .where('tutor', isEqualTo:_tutorController.teacher.value.uid)
           .get().then((value){
                 _selectedCourseController.selectedCourse.value = value.docs.first.get('course') ;
             });
     }
 
+  String formatDate1(String date){
+    String formattedDate = DateFormat('dd MMM yyyy').format(DateTime.parse(date));
+    return formattedDate;
   }
+
+  signInSilently(teacherId)async{
+    var teacherData = await fs.collection('tutor').doc(teacherId).get();
+
+    // print(teacher);
+    TeacherModel teacher = TeacherModel(
+        uid: teacherData.id,
+        fullname: teacherData.get('name'),
+        email: teacherData.get('email'),
+        institutionID: teacherData.get('institutionID'),
+        photo: teacherData.get('photo'),
+        password: teacherData.get('password')
+    );
+
+    //await loadData.addMissingFields(teacher.institutionID);
+
+    teacherController.teacher.value = teacher;
+    teacherController.update();
+    _teachersController.teachers.value = await loadData.getAllTeachers(teacher.institutionID);
+    _teachersController.update();
+    institutionController.institution.value = await loadData.getInstitution(institutionId: teacher.institutionID);
+    myClassesController.myClasses.value = await loadData.getMyClasses(teacher.uid);
+    myClassesController.update();
+    institutionController.update();
+    _studentsController.students.value = await loadData.getAllStudents(teacher.institutionID);
+    _studentsController.update();
+    _resultsController.results.value = await loadData.getResults(teacher.uid);
+    _resultsController.update();
+    _reasonsController.reasons.value = await loadData.getReasons(teacher.institutionID);
+    _guardiansController.guardians.value = await loadData.getGuardians();
+    _guardiansController.update();
+    _announcementsController.announcements.value = await loadData.getAnnouncements(teacher.institutionID);
+    _announcementsController.update();
+    _timetableController.timetables.value = await loadData.getSchoolTimetables(teacher.institutionID);
+    _timetableController.update();
+
+    Get.offAll(()=>Home(), transition: Transition.rightToLeft);
+
+  }
+
+
+  Map<String,int> dayInWeek = {
+      "Monday":1,
+      "Tuesday": 2,
+      "Wednesday": 3,
+      "Thursday": 4,
+      "Friday": 5,
+      "Saturday": 6,
+      "Sunday": 7
+  };
+
+  List<DateTime> getWeekdaysOfMonth(DateTime date, int weekday) {
+    List<DateTime> weekdays = [];
+    int daysInMonth = DateTime(date.year, date.month + 1, 0).day;
+
+    for (int day = 1; day <= daysInMonth; day++) {
+      DateTime currentDate = DateTime(date.year, date.month, day);
+      if (currentDate.weekday == weekday) {
+        weekdays.add(currentDate);
+      }
+    }
+
+    return weekdays;
+  }
+
+  List splitArray(String item,demarcator){
+    return item.split(demarcator);
+  }
+
+  List<TimetableItem> getTimetableDataFromController(List days, TimetableItemData timetableItemData){
+    List<TimetableItem> timetable = [];
+
+    for(int i = 0; i < days.length; i++){
+
+      for(int j = 0; j<getWeekdaysOfMonth(DateTime.now(), dayInWeek[days[i]]!).length; j++){
+
+        TimetableItem item = TimetableItem(
+            DateTime.parse('${splitArray(getWeekdaysOfMonth(DateTime.now(), dayInWeek[days[i]]!)[j].toString()," ").first} ${timetableItemData.start}'), //revisit
+            DateTime.parse('${splitArray(getWeekdaysOfMonth(DateTime.now(), dayInWeek[days[i]]!)[j].toString()," ").first} ${timetableItemData.end}'),  //revisit
+            data: timetableItemData
+        );
+        timetable.add(item);
+      }
+    }
+
+    return timetable;
+  }
+
+}
   
   

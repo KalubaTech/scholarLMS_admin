@@ -11,7 +11,7 @@ import 'package:touch_ripple_effect/touch_ripple_effect.dart';
 import "package:webview_universal/webview_universal.dart";
 import '../helpers/methods.dart';
 import '../models/book_model.dart';
-import '../styles/colors.dart' as kara;
+import '../styles/colors.dart';
 import 'package:get/get.dart';
 
 class AssessmentReader extends StatefulWidget {
@@ -56,7 +56,7 @@ class _AssessmentReaderState extends State<AssessmentReader> {
         padding: EdgeInsets.all(0),
         child: Container(
           decoration: BoxDecoration(
-            border: Border.all(color: kara.Colors.primary)
+            border: Border.all(color: Kara.primary)
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,7 +78,7 @@ class _AssessmentReaderState extends State<AssessmentReader> {
                   ],
                 ),
                 decoration: BoxDecoration(
-                    color: kara.Colors.primary,
+                    color: Kara.primary,
 
                 ),
               ),
@@ -106,7 +106,7 @@ class _AssessmentReaderState extends State<AssessmentReader> {
                                 children: [
                                   Container(
                                     decoration: BoxDecoration(
-                                      color: kara.Colors.background,
+                                      color: Kara.background,
                                       boxShadow: [
                                         BoxShadow(color: Colors.grey,blurRadius: 2)
                                       ]
@@ -215,7 +215,7 @@ class _AssessmentReaderState extends State<AssessmentReader> {
                                               child: Column(
                                                 children: [
                                                   Text('Marked', style: TextStyle(color: Colors.red)),
-                                                  Text('${snapshot.data!.docs.first.get('marks')} Marks', style: TextStyle(fontSize: 30, color: kara.Colors.green)),
+                                                  Text('${snapshot.data!.docs.first.get('marks')} Marks', style: TextStyle(fontSize: 30, color: Kara.green)),
                                                   Text('${formatDate(snapshot.data!.docs.first.get('datetime'))}', style: TextStyle(color: Colors.grey)),
                                                 ]
                                               ),
@@ -281,8 +281,8 @@ class _AssessmentReaderState extends State<AssessmentReader> {
                                                         'remarks': _remarksController.text,
                                                         'reason': "${widget.assessment['assessment']!.get('reason')}",
                                                         'student': widget.assessment['submission']!.get('student'),
-                                                        'student_id':student.id,
-                                                        'academic_year':student.academic_year
+                                                        'student_id':student.uid,
+                                                        'academic_year':student.academicYear
 
                                                       }).then((e){
                                                         _marksController.text = "";
@@ -293,7 +293,7 @@ class _AssessmentReaderState extends State<AssessmentReader> {
                                                     borderRadius: BorderRadius.circular(10),
                                                     child: Container(
                                                         decoration: BoxDecoration(
-                                                            color: kara.Colors.green,
+                                                            color: Kara.green,
                                                             borderRadius: BorderRadius.circular(10)
                                                         ),
                                                         width: double.infinity,

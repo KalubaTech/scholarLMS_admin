@@ -1,15 +1,24 @@
-import 'package:flutter/material.dart';
+import 'package:stdominicsadmin/models/timetable_item_data.dart';
 
-class TimetableEntry {
-  String day;
-  String course;
-  TimeOfDay startTime;
-  TimeOfDay endTime;
+class TimetableModel {
+  String id;
+  String title;
+  String description;
+  String teacher;
+  List days;
+  List audience;
+  String datetime;
+  List<TimetableItemData> data;
 
-  TimetableEntry({
-    required this.day,
-    required this.course,
-    required this.startTime,
-    required this.endTime,
+  TimetableModel({
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.audience,
+    required this.days,
+    required this.data,
+    required this.teacher,
+    required this.datetime
   });
+
 }

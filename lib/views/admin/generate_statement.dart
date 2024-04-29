@@ -5,7 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:printing/printing.dart';
-import 'package:stdominicsadmin/styles/colors.dart' as kara;
+import 'package:stdominicsadmin/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -44,7 +44,7 @@ class StatementGenerate extends StatelessWidget {
 
 
    List<DocumentSnapshot> gradingSnapshot = await FirebaseFirestore.instance.collection('grading_system')
-        .where('institutionID', isEqualTo: '${_institutionController.institution.value.id}')
+        .where('institutionID', isEqualTo: '${_institutionController.institution.value.uid}')
         .get().then((value) => value.docs);
 
  
@@ -217,7 +217,7 @@ class StatementGenerate extends StatelessWidget {
             Container(
               width: double.infinity,
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 6),
-              color: kara.Colors.primary,
+              color: Kara.primary,
               child: Row(
                 children: [
                   IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.arrow_back, color: Colors.white,)),
@@ -320,7 +320,7 @@ class StatementGenerate extends StatelessWidget {
                                   DataCell(
                                       StreamBuilder(
                                           stream: FirebaseFirestore.instance.collection('grading_system')
-                                              .where('institutionID', isEqualTo: '${_institutionController.institution.value.id}')
+                                              .where('institutionID', isEqualTo: '${_institutionController.institution.value.uid}')
                                               .snapshots(),
                                           builder: (context,snapshot){
                                             if (snapshot.hasData && snapshot.data!.docs.length>0) {

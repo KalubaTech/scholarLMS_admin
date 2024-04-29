@@ -7,8 +7,11 @@ String formatDate(String date){
     String formattedDate = DateFormat('EEE, dd MMM yyyy  HH:mm').format(DateTime.parse(date));
     return formattedDate;
   }
-
-  String formatTime(TimeOfDay time){
+  String formatDateOnly(String date){
+    String formattedDate = DateFormat('dd MMMM').format(DateTime.parse(date));
+    return formattedDate;
+  }
+  String format2Time(TimeOfDay time){
 
     String hour = time.hour.toString();
     String minute = time.minute.toString();

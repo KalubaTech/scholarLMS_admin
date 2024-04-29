@@ -3,15 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:stdominicsadmin/models/institution_model.dart';
-import 'package:stdominicsadmin/models/tutorModel.dart';
 import 'package:stdominicsadmin/views/home.dart';
 import 'package:touch_ripple_effect/touch_ripple_effect.dart';
-import 'package:stdominicsadmin/styles/colors.dart' as kara;
+import 'package:stdominicsadmin/styles/colors.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../controllers/selectedCourseController.dart';
 import '../controllers/tutorController.dart';
 import '../controllers/institution_controller.dart';
 import '../helpers/methods.dart';
+import '../helpers/sign_in.dart';
+import '../models/TutorModel.dart';
+import '../models/teacher_model.dart';
 
 
 class Sign extends StatefulWidget {
@@ -28,10 +30,8 @@ class _SignState extends State<Sign> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  TutorController _tutorController = Get.find();
-  InstitutionController _institutionController = Get.find();
-  SelectedCourseController _selectedCourseController = Get.find();
-  
+  Methods methods = Methods();
+  SignHelper signHelper = SignHelper();
 
   bool onerror = false;
 
@@ -42,11 +42,12 @@ class _SignState extends State<Sign> {
 
   }
 
+
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
-      backgroundColor: kara.Colors.background,
+      backgroundColor: Kara.background,
       body: Container(
         decoration: BoxDecoration(
           color: Colors.white70
@@ -56,9 +57,9 @@ class _SignState extends State<Sign> {
               padding: EdgeInsets.symmetric(horizontal: 40),
               decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(20),
                   boxShadow: [
-                    BoxShadow(color: Colors.black54,blurRadius: 1,spreadRadius: 1,offset: Offset(0, 1))
+                    BoxShadow(color: Colors.black38,blurRadius: 1,spreadRadius: 1,offset: Offset(0, 1))
                   ]
               ),
               width: 400,
@@ -72,7 +73,7 @@ class _SignState extends State<Sign> {
                       width: double.infinity,
                       padding: EdgeInsets.symmetric(vertical: 5),
                       color: Colors.grey.withOpacity(0.1),
-                      child: Center(child: Text('SIGN IN', style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: kara.Colors.green),))
+                      child: Center(child: Text('SIGN IN', style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Kara.green),))
                   ),
                   onerror?Container(
                       child: Column(
@@ -139,30 +140,56 @@ class _SignState extends State<Sign> {
                         child: TouchRippleEffect(
                           onTap: ()async{
                             onerror = false;
-                            Get.defaultDialog(
-                                title: '',
-                                content: Center(
-                                  child: LoadingAnimationWidget.flickr(
-                                    size: 60,
-                                    leftDotColor: Colors.lightBlue,
-                                    rightDotColor: Colors.redAccent,
-                                  ),
-                                ),
-                                backgroundColor: Colors.transparent
-                            );
                             if(emailController.text.isNotEmpty&&passwordController.text.isNotEmpty){
+                              Get.dialog(
+                                  Center(
+                                     child: LoadingAnimationWidget.discreteCircle(
+                                          color: Kara.primary,
+                                          size: 30)
+                                  ),
+                                  barrierColor: Colors.white70.withOpacity(0.2),
+                                  barrierDismissible: false
+                              );
+                              TeacherModel teacher = await signHelper.signIn(emailController.text, passwordController.text);
+
+
+                              if(teacher.uid==''){
+                                //print('ERROR LOGIN');
+                                Get.back();
+                              }else{
+                                //print('SUCCESS');
+
+                                await GetStorage().write('user', teacher.uid);
+                                _methods.signInSilently(teacher.uid);
+
+                              }
+                            }
+
+                           /* if(emailController.text.isNotEmpty&&passwordController.text.isNotEmpty){
                               await FirebaseFirestore.instance.collection('tutor')
                                   .where('email', isEqualTo: emailController.text)
                                   .where('password', isEqualTo: passwordController.text).get()
                                   .then((value){
                                 if(value.size>0){
 
-                                  TutorModel tutor = TutorModel(uid: value.docs.first.id, email:value.docs.first.get('email'),password: value.docs.first.get('password'), name: value.docs.first.get('name'), courses: value.docs.first.get('courses'), institutionID: value.docs.first.get('institutionID'));
+                                  TutorModel tutor = TutorModel(uid: value.docs.first.id, email:value.docs.first.get('email'),password: value.docs.first.get('password'), name: value.docs.first.get('name'), courses: value.docs.first.get('courses'), institutionID: value.docs.first.get('institutionID'), photo: value.docs.first.get('photo'));
                                   _tutorController.notifyTutor(tutor) ;
                                   _methods.preselectCourse();
                                   FirebaseFirestore.instance.collection('institutions').doc(value.docs.first.get('institutionID')).get().then((value){
                                     _institutionController.institution.value =
-                                        InstitutionModel(id: value.id, name: value.get('name'), admin: value.get('admin'), logo: value.get('logo'), motto: value.get('motto'),type: value.get('type'));
+                                        InstitutionModel(
+                                            uid: value.id,
+                                            name: value.get('name'),
+                                            admin: value.get('admin'),
+                                            logo: value.get('logo'),
+                                            motto: value.get('motto'),
+                                            type: value.get('type'),
+                                            status: value.get('status'),
+                                            province: value.get('province'),
+                                            district: value.get('district'),
+                                            country: value.get('country'),
+                                            subscriptionType: value.get('subscription'),
+                                        );
 
                                   });
 
@@ -177,7 +204,7 @@ class _SignState extends State<Sign> {
                                   });
                                 }
                               });
-                            }
+                            }*/
                           },
                           borderRadius: BorderRadius.circular(10),
                           rippleColor: Colors.greenAccent,
@@ -187,7 +214,7 @@ class _SignState extends State<Sign> {
                               height: 45,
                               width: double.infinity,
                               decoration: BoxDecoration(
-                                  color: kara.Colors.primary,
+                                  color: Kara.primary,
                                   borderRadius: BorderRadius.circular(10)
                               ),
                               child: Center(

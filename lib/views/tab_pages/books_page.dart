@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:stdominicsadmin/customs/custom_button.dart';
 import 'package:touch_ripple_effect/touch_ripple_effect.dart';
-import 'package:stdominicsadmin/styles/colors.dart' as kara;
+import 'package:stdominicsadmin/styles/colors.dart';
 import '../../controllers/institution_controller.dart';
 import '../../controllers/selectedCourseController.dart';
 import '../../controllers/tutorController.dart';
@@ -171,7 +171,7 @@ class _BooksPageState extends State<BooksPage> {
                                           onTap: (){
                                             Get.defaultDialog(
                                               title: 'Select ${Creds().coursesubect()}',
-                                              titleStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: kara.Colors.primary),
+                                              titleStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Kara.primary),
                                               titlePadding: EdgeInsets.symmetric(vertical: 20),
                                               content: Container(
                                                 height: 250,
@@ -222,7 +222,7 @@ class _BooksPageState extends State<BooksPage> {
                         onTap: (){
                           Get.defaultDialog(
                               title: 'Add Book',
-                              titleStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: kara.Colors.blue),
+                              titleStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Kara.blue),
                               titlePadding: EdgeInsets.symmetric(vertical: 20),
                               content: StatefulBuilder(
                                   builder: (context, state) {
@@ -409,7 +409,7 @@ class _BooksPageState extends State<BooksPage> {
                                               Get.back();
                                               Get.defaultDialog(
                                                   title: 'Uploading...',
-                                                  titleStyle: TextStyle(fontSize: 14,fontWeight: FontWeight.bold,color: kara.Colors.blue),
+                                                  titleStyle: TextStyle(fontSize: 14,fontWeight: FontWeight.bold,color: Kara.blue),
                                                   titlePadding: EdgeInsets.only(top: 20),
                                                   content: Container(
                                                       child: Obx(()=> LinearProgressIndicator(value: uploadprogress.value/100,minHeight: 10,))
@@ -422,7 +422,7 @@ class _BooksPageState extends State<BooksPage> {
                                             child: Container(
                                               decoration: BoxDecoration(
                                                   borderRadius: BorderRadius.circular(20),
-                                                  color: kara.Colors.green
+                                                  color: Kara.green
                                               ),
                                               padding: EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                                               child: Center(
@@ -444,7 +444,7 @@ class _BooksPageState extends State<BooksPage> {
                           decoration: BoxDecoration(
                               border: Border.all(color: Colors.grey),
                               borderRadius: BorderRadius.circular(20),
-                              color: kara.Colors.green
+                              color: Kara.green
                           ),
                           child: Row(
                             children: [
@@ -463,7 +463,7 @@ class _BooksPageState extends State<BooksPage> {
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   decoration: BoxDecoration(
-                      color: kara.Colors.background,
+                      color: Kara.background,
                       borderRadius: BorderRadius.circular(2)
                   ),
                   child: Column(
@@ -505,7 +505,7 @@ class _BooksPageState extends State<BooksPage> {
                                         Get.to(()=>Reader(book));
                                       },
                                       leading:  Image.asset('assets/bookpdf.png'),
-                                      title: Text('${book.title}', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: kara.Colors.primary),maxLines: 2, overflow: TextOverflow.ellipsis),
+                                      title: Text('${book.title}', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Kara.primary),maxLines: 2, overflow: TextOverflow.ellipsis),
                                       subtitle: Text('${element['academic_year']}'),
                                       trailing: PopupMenuButton(
                                         icon: Icon(Icons.more_horiz),

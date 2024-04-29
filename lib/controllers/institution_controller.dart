@@ -4,12 +4,17 @@ import 'package:stdominicsadmin/models/institution_model.dart';
 class InstitutionController extends GetxController{
 
   var institution = InstitutionModel(
-      id: '',
+      uid: '',
       name: '',
       admin: '',
       logo: '',
       motto: '',
-      type: ''
+      type: '',
+      subscriptionType: '',
+      province: '',
+      district: '',
+      country: '',
+      status: ''
   ).obs;
 
 

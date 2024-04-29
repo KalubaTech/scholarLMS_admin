@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/selectedItemsController.dart';
@@ -73,7 +72,7 @@ class _StudentCardState extends State<StudentCard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            widget.student.displayName,
+                            widget.student.name,
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 12,
@@ -110,12 +109,12 @@ class _StudentCardState extends State<StudentCard> {
           bottom: 2,
           right: 4,
           child: Obx(
-            ()=> Checkbox(value: widget.isSelected==true?true:widget.controller.selectedItems.value.contains(widget.student.id), onChanged: (value){
+            ()=> Checkbox(value: widget.isSelected==true?true:widget.controller.selectedItems.value.contains(widget.student.uid), onChanged: (value){
               setState(() {
-                if(widget.controller.selectedItems.value.contains(widget.student.id)){
-                  widget.controller.removeItem(widget.student.id);
+                if(widget.controller.selectedItems.value.contains(widget.student.uid)){
+                  widget.controller.removeItem(widget.student.uid);
                 }else{
-                  widget.controller.updateItem(widget.student.id);
+                  widget.controller.updateItem(widget.student.uid);
                 }
               });
             }),

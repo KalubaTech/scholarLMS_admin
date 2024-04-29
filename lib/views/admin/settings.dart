@@ -10,7 +10,7 @@ import 'package:stdominicsadmin/views/my_classes.dart';
 import 'package:touch_ripple_effect/touch_ripple_effect.dart';
 import '../../controllers/tutorController.dart';
 import '../../customs/custom_button.dart';
-import '../../styles/colors.dart' as kara;
+import '../../styles/colors.dart';
 import '../../controllers/institution_controller.dart';
 
 
@@ -71,7 +71,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Container(
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               decoration: BoxDecoration(
-                color: kara.Colors.primary
+                color: Kara.primary
               ),
               child: MouseRegion(
                 cursor: SystemMouseCursors.click,
@@ -193,7 +193,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                                 color: Colors.white
                                                             ),
                                                             padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                                                            child: Icon(Icons.edit, color: kara.Colors.primary, )
+                                                            child: Icon(Icons.edit, color: Kara.primary, )
                                                         ),
                                                       ),
                                                     ),
@@ -238,7 +238,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                                           borderRadius: BorderRadius.circular(10),
                                                                           rippleColor: Colors.grey.withOpacity(0.4),
                                                                           onTap: ()=>methods.editTutorName(),
-                                                                          child:Icon(Icons.edit, color: kara.Colors.primary, size: 18)
+                                                                          child:Icon(Icons.edit, color: Kara.primary, size: 18)
                                                                       )
                                                                   )
                                                               )
@@ -304,7 +304,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                               child: TouchRippleEffect(
                                                                   rippleColor: Colors.grey.withOpacity(0.3),
                                                                   onTap: ()=>methods.changePassword(context),
-                                                                  child: Icon(Icons.edit, color: kara.Colors.primary, size: 18)
+                                                                  child: Icon(Icons.edit, color: Kara.primary, size: 18)
                                                               )
                                                           )
                                                         ],
@@ -350,7 +350,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                               child: TouchRippleEffect(
                                                                   rippleColor: Colors.grey.withOpacity(0.3),
                                                                   onTap: ()=>Get.to(()=>MyClasses()),
-                                                                  child: Icon(Icons.edit, color: kara.Colors.primary, size: 18)
+                                                                  child: Icon(Icons.edit, color: Kara.primary, size: 18)
                                                               )
                                                           )
                                                         ],
@@ -451,7 +451,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                           children: [
                                                             StreamBuilder(
                                                                 stream: FirebaseFirestore.instance.collection('institutions')
-                                                                    .doc(_institutionController.institution.value.id)
+                                                                    .doc(_institutionController.institution.value.uid)
                                                                     .snapshots(),
                                                                 builder: (context, snapshot) {
                                                                   return snapshot.hasData?Text('${snapshot.data!.get('name')}'):Text('Not set');
@@ -464,7 +464,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                                     borderRadius: BorderRadius.circular(10),
                                                                     rippleColor: Colors.grey.withOpacity(0.4),
                                                                     onTap: ()=>methods.editInstitutionName(),
-                                                                    child:Icon(Icons.edit, color: kara.Colors.primary, size: 18)
+                                                                    child:Icon(Icons.edit, color: Kara.primary, size: 18)
                                                                 )
                                                             )
                                                           ],
@@ -493,7 +493,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                             Expanded(
                                                               child: StreamBuilder(
                                                                   stream: FirebaseFirestore.instance.collection('institutions')
-                                                                      .doc(_institutionController.institution.value.id)
+                                                                      .doc(_institutionController.institution.value.uid)
                                                                       .snapshots(),
                                                                   builder: (context, snapshot) {
                                                                     return snapshot.hasData?Text('${snapshot.data!.get('motto')}'.toString().capitalizeFirst!, maxLines: 2, overflow: TextOverflow.ellipsis,):Text('Not set');
@@ -506,7 +506,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                                     borderRadius: BorderRadius.circular(10),
                                                                     rippleColor: Colors.grey.withOpacity(0.4),
                                                                     onTap: ()=>methods.editInstitutionMotto(),
-                                                                    child:Icon(Icons.edit, color: kara.Colors.primary, size: 18)))
+                                                                    child:Icon(Icons.edit, color: Kara.primary, size: 18)))
                                                           ],
                                                         ),
                                                       ],
@@ -532,7 +532,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                           children: [
                                                             StreamBuilder(
                                                                 stream: FirebaseFirestore.instance.collection('tutor').
-                                                                where('institutionID', isEqualTo: _institutionController.institution.value.id)
+                                                                where('institutionID', isEqualTo: _institutionController.institution.value.uid)
                                                                     .snapshots(),
                                                                 builder: (context, snapshot) {
                                                                   return snapshot.hasData ? Text('${snapshot.data!.size} ${_institutionController.institution.value.type=='primary'?'Teachers':'Lecturers'}'):Text('');
@@ -544,7 +544,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                                 child: TouchRippleEffect(
                                                                     rippleColor: Colors.grey.withOpacity(0.4),
                                                                     onTap: ()=>methods.lecturers(),
-                                                                    child:Icon(Icons.edit, color: kara.Colors.primary, size: 18)
+                                                                    child:Icon(Icons.edit, color: Kara.primary, size: 18)
                                                                 )
                                                             )
                                                           ],
@@ -572,7 +572,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                           children: [
                                                             StreamBuilder(
                                                                 stream: FirebaseFirestore.instance.collection('programmes')
-                                                                    .where('institutionID', isEqualTo: _institutionController.institution.value.id).snapshots(),
+                                                                    .where('institutionID', isEqualTo: _institutionController.institution.value.uid).snapshots(),
                                                                 builder: (context, snapshot) {
                                                                   return snapshot.hasData?Text('${snapshot.data!.size} ${_institutionController.institution.value.type=='primary'?'Classes':'Programmes'}'):Text('Not set');
                                                                 }
@@ -583,7 +583,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                                 child: TouchRippleEffect(
                                                                     rippleColor: Colors.grey.withOpacity(0.4),
                                                                     onTap: ()=>methods.programmes(),
-                                                                    child:Icon(Icons.edit, color: kara.Colors.primary, size: 18)
+                                                                    child:Icon(Icons.edit, color: Kara.primary, size: 18)
                                                                 )
                                                             )
                                                           ],
@@ -611,7 +611,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                           children: [
                                                             StreamBuilder(
                                                                 stream: FirebaseFirestore.instance.collection('courses').
-                                                                where('institutionID', isEqualTo: _institutionController.institution.value.id).
+                                                                where('institutionID', isEqualTo: _institutionController.institution.value.uid).
                                                                 snapshots(),
                                                                 builder: (context, snapshot) {
                                                                   return snapshot.hasData?Text('${snapshot.data!.size} ${_institutionController.institution.value.type=='primary'?'Subjects':'Courses'}'):Text('Not set');
@@ -622,7 +622,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                               cursor: SystemMouseCursors.click,
                                                               child: TouchRippleEffect(
                                                                   onTap: ()=>methods.courses(),
-                                                                  child: Icon(Icons.edit, color: kara.Colors.primary, size: 18)
+                                                                  child: Icon(Icons.edit, color: Kara.primary, size: 18)
                                                               ),
                                                             )
                                                           ],
@@ -690,7 +690,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                     child: Column(
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
-                                                        Text('Grading System', style: TextStyle(color: kara.Colors.primary)),
+                                                        Text('Grading System', style: TextStyle(color: Kara.primary)),
                                                         SizedBox(height: 5),
 
                                                       ],
